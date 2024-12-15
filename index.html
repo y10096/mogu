@@ -102,7 +102,9 @@
            .call(d3.axisBottom(x).tickSize(0))
            .selectAll(".tick text")
            .attr("class", "axis-label")
-           .attr("dy", "2em"); // Shift the labels down
+           .attr("dx", "-1em") // 左移一个字符
+           .attr("dy", "2em");
+
 
 
 
