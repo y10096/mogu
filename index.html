@@ -102,7 +102,10 @@
            .call(d3.axisBottom(x).tickSize(0))
            .selectAll(".tick text")
            .attr("class", "axis-label")
-           .attr("dy", "1em"); // Shift the labels down
+           .attr("dy", "2em") // Shift the labels down
+           .style("text-anchor", "middle") // Center-align text horizontally
+           .attr("x", d => x.bandwidth() * 0.35); // Center the text relative to the bar
+
 
         // Add the y-axis to the chart
         svg.append("g")
