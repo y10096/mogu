@@ -1,1 +1,105 @@
-hello world
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edible Mushrooms Production (in 10,000 tons)</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        .bar {
+            fill: steelblue;
+        }
+        .bar:hover {
+            fill: orange;
+        }
+        .axis-label {
+            font-size: 14px;
+        }
+        .axis path,
+        .axis line {
+            fill: none;
+            shape-rendering: crispEdges;
+        }
+    </style>
+</head>
+<body>
+    <h2>Edible Mushrooms Production Over the Years (in 10,000 tons)</h2>
+    <svg width="800" height="500"></svg>
+
+    <script>
+        // Data for the years and corresponding edible mushrooms' production (in 10,000 tons)
+        const data = [
+            { year: 2015, production: 6.77679 },
+            { year: 2016, production: 8.04502 },
+            { year: 2017, production: 9.14275 },
+            { year: 2018, production: 8.96441 },
+            { year: 2019, production: 10.02926 },
+            { year: 2020, production: 11.876667 },
+            { year: 2021, production: 11.54 },
+            { year: 2022, production: 12.176237 }
+        ];
+
+        // Set up margins and dimensions for the chart
+        const margin = { top: 20, right: 30, bottom: 40, left: 40 },
+              width = 800 - margin.left - margin.right,
+              height = 500 - margin.top - margin.bottom;
+
+        // Set up the SVG canvas
+        const svg = d3.select("svg")
+                      .attr("width", width + margin.left + margin.right)
+                      .attr("height", height + margin.top + margin.bottom)
+                    .append("g")
+                      .attr("transform", `translate(${margin.left},${margin.top})`);
+
+        // Set up the scales for the x and y axes
+        const x = d3.scaleBand()
+                    .domain(data.map(d => d.year))
+                    .range([0, width])
+                    .padding(0.1);
+
+        const y = d3.scaleLinear()
+                    .domain([0, d3.max(data, d => d.production)])
+                    .nice()
+                    .range([height, 0]);
+
+        // Create the bars for the chart
+        svg.selectAll(".bar")
+           .data(data)
+           .enter().append("rect")
+           .attr("class", "bar")
+           .attr("x", d => x(d.year))
+           .attr("y", d => y(d.production))
+           .attr("width", x.bandwidth())
+           .attr("height", d => height - y(d.production));
+
+        // Add the x-axis to the chart
+        svg.append("g")
+           .attr("class", "x axis")
+           .attr("transform", `translate(0,${height})`)
+           .call(d3.axisBottom(x).tickSize(0))
+           .selectAll(".tick text")
+           .attr("class", "axis-label");
+
+        // Add the y-axis to the chart
+        svg.append("g")
+           .attr("class", "y axis")
+           .call(d3.axisLeft(y).ticks(5))
+           .selectAll(".tick text")
+           .attr("class", "axis-label");
+
+        // Add axis labels
+        svg.append("text")
+           .attr("transform", `translate(${width / 2},${height + margin.bottom - 5})`)
+           .style("text-anchor", "middle")
+           .text("Year");
+
+        svg.append("text")
+           .attr("transform", "rotate(-90)")
+           .attr("y", 0 - margin.left)
+           .attr("x", 0 - height / 2)
+           .style("text-anchor", "middle")
+           .text("Production (in 10,000 tons)");
+    </script>
+</body>
+</html>
+
